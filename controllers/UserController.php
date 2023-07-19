@@ -18,9 +18,7 @@ class UserController extends AbstractController {
         var_dump($allUsers);
         var_dump($allOrders);
         $this->render('index', ["users" => $allUsers, "orders" => $allOrders]);
-
     }
-
 
 
     public function createUser()
@@ -28,10 +26,14 @@ class UserController extends AbstractController {
         $this->render('users/create.phtml', []);
         if(isset($_POST['submit-create-user']))
         {
-            $user = new User($_POST['firstname'], $_POST['lastname'],$_POST['email'], $_POST['password']);
-            $this->userManager->insertUser($user);
-            $allUsers = $this->userManager->getAllUsers();
-            // $this->render('users/create.phtml', ['user' => $user]);
+            if($_POST['password'] === $_POST['confirm-password'])
+            {
+                $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                $user = new User($_POST['firstName'], $_POST['lastName'],$_POST['email'], $password);
+                $this->userManager->insertUser($user);
+                $allUsers = $this->userManager->getAllUsers();
+                // $this->render('users/create.phtml', ['user' => $user]);
+            }
         }
         else
         {
@@ -41,41 +43,49 @@ class UserController extends AbstractController {
     }
 
 
-    public function editUser($id){
-
-        if(isset($_POST['firstname'], $_POST['lastname']))
+    public function editUser()
+    {
+        if(isset($_POST['submit-edit-user']))
         {
-            $user = new User($_SESSION['id'], $_POST['firstname'], $_POST['lastname'],$_POST['password'],$_POST['email']);
-            $this->userManager->updateUser($id);
+            $user = new User($_POST['firstName'], $_POST['lastName'],$_POST['password'],$_POST['email']);
+            $user->setId($_SESSION['user']->getId());
+            $this->userManager->updateUser($user);
             $allUsers = $this->userManager->getAllUsers();
-            $this->render('edit_user', ['users' => $allUsers]);
-        } else{
-            $allUsers = $this->userManager->getAllusers();
-            $this->render('index_user', ['users' => $allUsers]);
+            $this->render('edit-user', ['users' => $allUsers]);
+        } 
+        else
+        {
+            $this->render('edit-user', []);
         }
-
     }
 
 
-    public function delete(int $Id)
+    // public function deleteUser()
+    // {
+    //     $this->userManager->deleteUser($Id);
+    //     $allUsers = $this->userManager->getAllUsers();
+    //     $this->render('delete_user', ['users' => $allUsers]);
+    // }
+
+
+    public function read()
     {
-        $this->userManager->deleteUser($Id);
-        $allUsers = $this->userManager->getAllUsers();
-        $this->render('delete_user', ['users' => $allUsers]);
-    }
-
-
-
-
-    public function read(int $userId)
-    {
-        $user = $this->userManager->getUserById($userId);
-
-        if ($user !== null) {
-            $this->render('read_user', ['user' => $user]);
-        } else {
-            echo'user non trouvé';
+        if(isset($_POST['submit-login']))
+        {
+            $user = $this->userManager->getUserByEmail($_POST['email']);
+            if(password_verify($_POST['password'], $user->getPassword()));
+            {
+                $_SESSION['user'] = $user;
+            }
+            
         }
+        // $user = $this->userManager->getUserById($userId);
+
+        // if ($user !== null) {
+        //     $this->render('read_user', ['user' => $user]);
+        // } else {
+        //     echo'user non trouvé';
+        // }
     }
 
     // public function readAll()

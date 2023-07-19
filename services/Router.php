@@ -36,11 +36,15 @@ class Router {
             }
             else if($_GET['route'] === "all-products")
             {
-                $this->productController->productsByCategory();
+                $this->productController->indexOfProducts();
             }
             else if($_GET['route'] === "create-category")
             {
                 $this->categoryController->createCategory();
+            }
+            else if($_GET['route'] === "category" && isset($_GET['category_id']))
+            {
+                $this->productController->productsByCategory();
             }
         }
         else
