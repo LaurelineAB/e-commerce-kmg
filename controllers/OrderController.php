@@ -1,12 +1,10 @@
 <?php
 
-Class OrderController extends AbstractController {
+class OrderController extends AbstractController {
 
-    private OrderManager $O_manager;
+    public function __construct(){
 
-    public function __construct(OrderController $O_manager){
-
-        $this->OrderManager = $O_manager;
+        $this->orderManager = new Order();
 
     }
 
@@ -14,10 +12,10 @@ Class OrderController extends AbstractController {
     // Rendu de la vue "orders/create.phtml" avec le tableau $post
     $this->render('orders/create.phtml', $post);
 
-    if(isset($_POST['add'])){
-        $this->OrderManager->saveOrder($post);
+        if(isset($_POST['add'])){
+            $this->orderManager->saveOrder($post);
+        }
     }
-}
 
     public function getOrderById(){
 

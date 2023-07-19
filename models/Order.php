@@ -1,17 +1,17 @@
 <?php
 class Order {
-    private int $id;
+    private ? int $id;
     private $date;
-    private $product;
-    private $user;
-    private $price;
+    private User $userId;
+    private Product $productId;
+    private float $totalPrice;
 
-    public function __construct(int $id, $date, $product, $user, $price) {
-        $this->id = $id;
+    public function __construct($date, $userId, $productId, $totalPrice) {
+        $this->id = null;
         $this->date = $date;
-        $this->product = $product;
-        $this->user = $user;
-        $this->price = $price;
+        $this->userId = $userId;
+        $this->productId = $productId;
+        $this->totalPrice = $totalPrice;
 
     }
 
@@ -33,28 +33,28 @@ class Order {
         $this->date = $date;
     }
 
-    public function getProduct() {
-        return $this->product;
+    public function getUserId() {
+        return $this->userId;
     }
 
-    public function setProduct($product): void {
-        $this->product = $product;
+    public function setUserId($userId): void {
+        $this->userId = $userId;
     }
 
-    public function getUser() {
-        return $this->user;
+    public function getProductId() {
+        return $this->productId;
     }
 
-    public function setUser($user): void {
-        $this->user = $user;
+    public function setProductId($productId): void {
+        $this->productId = $productId;
     }
 
-    public function getPrice() {
-        return $this->price;
+    public function getTotalPrice() {
+        return $this->TotalPrice;
     }
 
-    public function setPrice($price): void {
-        $this->price = $price;
+    public function setTotalPrice($totalPrice): void {
+        $this->totalPrice = $totalPrice;
     }
 }
 
