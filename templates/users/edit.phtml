@@ -1,5 +1,8 @@
+<h1>Modifier votre compte</h1>
+<?php if(isset($_SESSION['user']))
+{
+?>
 <form action="index.php?route=edit-user" method="POST">
-    <legend>Modifier votre compte</legend>
     <fieldset>
         <label for="firstName"> Nom  : </label>
         <input type="text" id="firstName" name="firstName">
@@ -18,3 +21,10 @@
     </fieldset>
         <input type="submit" value="Modifier" name="submit-edit-user" id="submit-edit-user">
 </form>
+<?php
+}
+else
+{
+    echo "Vous devez vous connecter pour pouvoir modifier votre compte.";
+}
+?>

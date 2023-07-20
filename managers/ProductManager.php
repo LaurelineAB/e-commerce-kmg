@@ -84,8 +84,8 @@ class ProductManager extends AbstractManager {
     // To get all the products from a same category
     public function getProductByCategory(string $name) : array
     {
-        $query=$this->db->prepare("SELECT * FROM products JOIN categories ON products.id = categories.product_id
-            WHERE categories.name = :name");
+        $query=$this->db->prepare("SELECT * FROM products JOIN categories ON products.category_id = categories.id
+            WHERE categories.category_name = :name");
         $parameters=['name' => $name];
         $query->execute($parameters);
 
