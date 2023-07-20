@@ -4,7 +4,7 @@ class OrderController extends AbstractController {
 
     public function __construct(){
 
-        $this->orderManager = new Order();
+        $this->orderManager = new OrderManager();
 
     }
 

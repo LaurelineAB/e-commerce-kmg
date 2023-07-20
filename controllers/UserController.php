@@ -23,8 +23,8 @@ class UserController extends AbstractController {
 
     public function createUser()
     {
-        $this->render('users/create.phtml', []);
-        if(isset($_POST['submit-create-user']))
+        // $this->render('users/create.phtml', []);
+        if(isset($_POST['submit-register']))
         {
             if($_POST['password'] === $_POST['confirm-password'])
             {
@@ -32,13 +32,15 @@ class UserController extends AbstractController {
                 $user = new User($_POST['firstName'], $_POST['lastName'],$_POST['email'], $password);
                 $this->userManager->insertUser($user);
                 $allUsers = $this->userManager->getAllUsers();
-                // $this->render('users/create.phtml', ['user' => $user]);
+                $this->render('users/login.phtml', []);
             }
         }
         else
         {
             $allUsers = $this->userManager->getAllUsers();
-            $this->render('create_user', ['users' => $allUsers]);
+            
+                var_dump($allUsers);
+            $this->render('users/create.phtml', []);
         }
     }
 
@@ -50,12 +52,14 @@ class UserController extends AbstractController {
             $user = new User($_POST['firstName'], $_POST['lastName'],$_POST['password'],$_POST['email']);
             $user->setId($_SESSION['user']->getId());
             $this->userManager->updateUser($user);
+            $_SESSION['user'] = $user;
             $allUsers = $this->userManager->getAllUsers();
-            $this->render('edit-user', ['users' => $allUsers]);
+            header("Location:index.php?route=homepage");
+            // $this->render('edit-user', ['users' => $allUsers]);
         } 
         else
         {
-            $this->render('edit-user', []);
+            $this->render('users/edit.phtml', []);
         }
     }
 
@@ -73,11 +77,16 @@ class UserController extends AbstractController {
         if(isset($_POST['submit-login']))
         {
             $user = $this->userManager->getUserByEmail($_POST['email']);
+            var_dump($user);
             if(password_verify($_POST['password'], $user->getPassword()));
             {
                 $_SESSION['user'] = $user;
             }
-            
+            header("Location:index.php?route=homepage");
+        }
+        else
+        {
+            $this->render("users/login.phtml",[]);
         }
         // $user = $this->userManager->getUserById($userId);
 

@@ -22,7 +22,7 @@ class Router {
                 $this->categoryController->getAllCategories();
                 // $this->productController->indexOfProducts();
             }
-            if($_GET['route'] === "create-user")
+            if($_GET['route'] === "register")
             {
                 $this->userController->createUser();
             }
@@ -32,7 +32,7 @@ class Router {
             }
             else if($_GET['route'] === "login")
             {
-                $this->userController->read($_SESSION['user_id']);
+                $this->userController->read();
             }
             else if($_GET['route'] === "all-products")
             {
@@ -55,7 +55,7 @@ class Router {
         else
         {
             $this->categoryController->getAllCategories();
-            $this->productController->indexOfProducts();
+            // $this->productController->indexOfProducts();
         }
     }
 }
