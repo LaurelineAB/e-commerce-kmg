@@ -7,7 +7,7 @@ class CategoryManager extends AbstractManager {
     {
         $query=$this->db->prepare("SELECT * FROM categories");
         $query->execute();
-        $array=$query->fetch(PDO::FETCH_ASSOC);
+        $array=$query->fetchAll(PDO::FETCH_ASSOC);
 
         return $array;
     }

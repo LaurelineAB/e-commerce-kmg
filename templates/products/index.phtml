@@ -1,0 +1,15 @@
+<h1>Produits</h1>
+<ul>
+    <?php
+        foreach($data as $product)
+        {
+            echo 
+            "<li>
+                <img src='".$product['pictures']."'/>
+                <p>".$product['name']."</p>
+                <p>".$product['price']."</p>
+                <a href='index.php?route=product&product_id=".$product['id']."'>Détails</a>
+            </li>";
+        }
+    ?>
+</ul>

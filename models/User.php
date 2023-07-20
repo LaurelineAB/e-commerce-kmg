@@ -39,7 +39,7 @@ class User {
         $this->firstName = $firstName;
     }
 
-    public function getLastName(string $lastName) : string
+    public function getLastName() : string
     {
         return $this->lastName;
     }
