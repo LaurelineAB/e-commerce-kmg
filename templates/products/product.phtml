@@ -1,3 +1,9 @@
 <?php $product = $data[0]; ?>
 <h1><?= $product->getName(); ?></h1>
 <img src="<?= $product->getPicture(); ?>"></img>
+<p><?= $product->getPrice(); ?></p>
+<form action="index.php?route=product" method="POST">
+    <input type="hidden" name="productId" id="productId" value="<?= $product->getId(); ?>"/>
+    <input type="submit" name="order-product" id="order-product" value="Ajouter au panier"/>
+</form>
+<p><?= $product->getDescription(); ?></p>

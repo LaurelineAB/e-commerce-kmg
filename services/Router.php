@@ -38,6 +38,10 @@ class Router {
             {
                 $this->productController->indexOfProducts();
             }
+            else if ($_GET['route'] === "create-product")
+            {
+                $this->productController->createProduct();
+            }
             else if($_GET['route'] === "create-category")
             {
                 $this->categoryController->createCategory();

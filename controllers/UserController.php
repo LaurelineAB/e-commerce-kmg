@@ -81,6 +81,7 @@ class UserController extends AbstractController {
             if(password_verify($_POST['password'], $user->getPassword()));
             {
                 $_SESSION['user'] = $user;
+                $_SESSION['cart'] = [];
             }
             header("Location:index.php?route=homepage");
         }
