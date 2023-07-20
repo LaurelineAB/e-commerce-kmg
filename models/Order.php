@@ -3,15 +3,15 @@ class Order {
     private ? int $id;
     private $date;
     private User $userId;
-    private Product $productId;
     private float $totalPrice;
+    private $products = [];
 
-    public function __construct($date, $userId, $productId, $totalPrice) {
+    public function __construct($date, $userId, $totalPrice) {
         $this->id = null;
         $this->date = $date;
         $this->userId = $userId;
-        $this->productId = $productId;
         $this->totalPrice = $totalPrice;
+        $this->products = [];
 
     }
 
@@ -41,14 +41,6 @@ class Order {
         $this->userId = $userId;
     }
 
-    public function getProductId() {
-        return $this->productId;
-    }
-
-    public function setProductId($productId): void {
-        $this->productId = $productId;
-    }
-
     public function getTotalPrice() {
         return $this->TotalPrice;
     }
@@ -56,6 +48,14 @@ class Order {
     public function setTotalPrice($totalPrice): void {
         $this->totalPrice = $totalPrice;
     }
+
+    public function getProducts(){
+        return $this->products;
+    }
+    public function setProducts($products){
+        $this->products = $products;
+    }
+
 }
 
 ?>

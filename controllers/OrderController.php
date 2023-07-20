@@ -16,26 +16,6 @@ class OrderController extends AbstractController {
             $this->orderManager->saveOrder($post);
         }
     }
-
-    public function getOrderById(){
-
-    }
-
-    public function getAmoutProduct(){
-
-    }
-
-    public function getTotalPrice (){
-
-    }
-
-    public function getAllOrders(){
-
-    }
-
-    public function getOrderByUser(){
-
-    }
 }
 
 ?>
