@@ -14,15 +14,14 @@ class CategoryManager extends AbstractManager {
 
     public function createCategory(Category $category) : Category
     {
-        $query=$this->db->prepare("INSERT INTO categories (category_name, product_id, description)
-                            VALUES (:name, :product, :description)");
-        $parameters=[
+        $query = $this->db->prepare("INSERT INTO categories (category_name, description)
+                            VALUES (:name, :description)");
+        $parameters = [
             'name' => $category->getName(),
-            'product' => $category->getProduct()->getId(),
             'description' => $category->getDescription()
         ];
         $query->execute($parameters);
-        $id=$query->fetch(PDO::FETCH_ASSOC);
+        // $id = $query->fetch(PDO::FETCH_ASSOC);
         $category->setId($this->db->lastInsertId());
 
         return $category;

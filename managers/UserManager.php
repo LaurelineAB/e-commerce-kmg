@@ -8,7 +8,7 @@ class UserManager extends AbstractManager
     // création de user
     public function insertUser(User $user) : ?User
     {
-        $query = $this->db->prepare("INSERT INTO users(first_name,last_name, email, password) VALUES (:firstName,:lastName, :email, :password)");
+        $query = $this->db->prepare("INSERT INTO users(first_name, last_name, email, password) VALUES (:firstName, :lastName, :email, :password)");
         $parameters = [
             "firstName" => $user->getFirstName(),
             "lastName" => $user->getLastName(),
@@ -32,7 +32,8 @@ class UserManager extends AbstractManager
             "firstName" => $user->getFirstName(),
             "lastName" => $user->getLastName(),
             "email" => $user->getEmail(),
-            "password" => $user->getPassword
+            "password" => $user->getPassword(),
+            "id" => $user->getId()
         ];
         $query->execute($parameters);
     }
@@ -81,11 +82,11 @@ class UserManager extends AbstractManager
         ];
         $query->execute($parameters);
         $result = $query->fetch(PDO::FETCH_ASSOC);
-
+        var_dump($result);
         if($result !== false)
         {
-            $user = new User($result["first_name"],$result["last_name"], $result["email"], $result["password"]);
-            $user->setId($result["id"]);
+            $user = new User($result['first_name'],$result['last_name'], $result['email'], $result['password']);
+            $user->setId($result['id']);
             return $user;
         }
         else

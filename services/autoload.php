@@ -6,6 +6,8 @@ require './models/Category.php';
 require './models/Product.php';
 require './models/Order.php';
 
+session_start();
+
 require './managers/AbstractManager.php';
 require './managers/CategoryManager.php';
 require './managers/UserManager.php';

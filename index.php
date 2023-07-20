@@ -1,6 +1,6 @@
 <?php
 
-session_start();
+// session_start();
 
 require 'services/autoload.php';
 
@@ -14,12 +14,9 @@ $pc = new ProductController($pm);
 $cc = new CategoryController($cm);
 $oc = new OrderController($om);
 
-if(isset($_GET['route']))
-{
-    require 'services/Router.php';
-    $router = new Router($uc, $pc, $cc, $oc);
-    $router->checkRoute();
-}
+// require 'services/Router.php';
+$router = new Router();
+$router->checkRoute();
 
 
 
