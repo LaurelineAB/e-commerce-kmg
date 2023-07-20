@@ -1,0 +1,20 @@
+<div class="callout primary">
+    <article class="grid-container">
+      <div class="">
+        <!--Utiliser getcategoryById-->
+        <h1><?= $category['category_name'] ?></h1>
+        <p class="lead"><?= $category['description'] ?></p>
+      </div>
+    </article>
+</div>
+<div class="grid-x grid-margin-x small-up-2 medium-up-3 large-up-4">
+  <!--A relier à productByCategories-->
+    <?php foreach($products as $products): ?>
+    <div class="cell">
+      <img class="thumbnail" src="<?= $product['pictures'] ?>">
+      <h5><?= $product['product_name'] ?></h5>
+      <p><?= $product['description'] ?></p>
+    </div>
+    <div class="cell">
+    <?php endforeach; ?>
+</div>

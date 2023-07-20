@@ -37,15 +37,14 @@ class ProductController extends AbstractController {
             header("Location:index.php?route=homepage");
         }
     }
-
     // To have all the products by Category
     public function productsByCategory(string $category)
     {
-        $id =
         $category = $this->cm->getCategoryById($id); // Put the id in parameter
         $products = $this->pm->getProductByCategory($category->getName()); // Put the name of the category in parameter
-        $this->render('categories/category.phtml', $products);
+        $this->render('products/index.phtml', $products, $category);
     }
+    
 }
 
 ?>

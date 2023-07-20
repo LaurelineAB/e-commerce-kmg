@@ -34,7 +34,7 @@ class Router {
             {
                 $this->userController->read($_SESSION['user_id']);
             }
-            else if($_GET['route'] === "all-products")
+            else if($_GET['route'] === "Category-products")
             {
                 $this->productController->productsByCategory();
             }
