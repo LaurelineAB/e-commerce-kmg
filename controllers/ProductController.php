@@ -29,7 +29,7 @@ class ProductController extends AbstractController {
             $price = $_POST['price'];
             $quantity = $_POST['quantity'];
             $catID = $_POST['category'];
-            $category = $this->cm->getCategoryById($catId);
+            $category = $this->cm->getCategoryById($catID);
 
             $product = new Product($name, $picture, $description, $price, $quantity, $category);
             $this->pm->createProduct($product);
