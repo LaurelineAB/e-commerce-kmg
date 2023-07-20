@@ -1,17 +1,17 @@
 <?php
 class Order {
-    private int $id;
+    private ? int $id;
     private $date;
-    private $product;
-    private $user;
-    private $price;
+    private User $userId;
+    private float $totalPrice;
+    private $products = [];
 
-    public function __construct(int $id, $date, $product, $user, $price) {
-        $this->id = $id;
+    public function __construct($date, $userId, $totalPrice) {
+        $this->id = null;
         $this->date = $date;
-        $this->product = $product;
-        $this->user = $user;
-        $this->price = $price;
+        $this->userId = $userId;
+        $this->totalPrice = $totalPrice;
+        $this->products = [];
 
     }
 
@@ -33,29 +33,29 @@ class Order {
         $this->date = $date;
     }
 
-    public function getProduct() {
-        return $this->product;
+    public function getUserId() {
+        return $this->userId;
     }
 
-    public function setProduct($product): void {
-        $this->product = $product;
+    public function setUserId($userId): void {
+        $this->userId = $userId;
     }
 
-    public function getUser() {
-        return $this->user;
+    public function getTotalPrice() {
+        return $this->TotalPrice;
     }
 
-    public function setUser($user): void {
-        $this->user = $user;
+    public function setTotalPrice($totalPrice): void {
+        $this->totalPrice = $totalPrice;
     }
 
-    public function getPrice() {
-        return $this->price;
+    public function getProducts(){
+        return $this->products;
+    }
+    public function setProducts($products){
+        $this->products = $products;
     }
 
-    public function setPrice($price): void {
-        $this->price = $price;
-    }
 }
 
 ?>

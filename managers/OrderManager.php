@@ -6,21 +6,21 @@ class OrderManager extends AbstractManager {
         // Récupérer les valeurs de l'objet Order pour l'insertion dans la base de données
         $orderId = $order->getId();
         $date = $order->getDate()->format('Y-m-d H:i:s');
-        $productId = $order->getProduct()->getId();
         $userId = $order->getUser()->getId();
-        $price = $order->getPrice();
+        $order_id = $this->getOrderId($orderId);
+        $totalPrice = $order->getTotalPrice($order_id);
 
         // Exemple de requête d'insertion SQL
-        $sql = "INSERT INTO orders (id, date, product_id, user_id, price) VALUES (?, ?, ?, ?, ?)";
-
-        // Préparer la requête avec la connexion à la base de données
-        $stmt = $this->db()->prepare($sql);
-
-        // Binder les valeurs aux paramètres de la requête
-        $stmt->bind_param("issid", $orderId, $date, $productId, $userId, $price);
-
-        // Exécuter la requête
-        $result = $stmt->execute();
+        $query = $this->db->prepare("INSERT INTO orders (date, user_id, total_price) VALUES ( :date, :user_id, :total_price)");
+        
+        $parameters = [
+                'date' => $date,
+                'user_id' => $userId,
+                'total_price' =>$totalPrice
+            ];
+        
+        $result = $query->execute($parameters);
+        $order->setId($this->db->lastInsertId());
         if ($result) {
             return $order; // Retourner l'objet Order si la sauvegarde a réussi
         } else {
@@ -30,76 +30,56 @@ class OrderManager extends AbstractManager {
 
 
     public function getOrderById(int $orderId): ?Order {
-        $sql = "SELECT id, date, product_id, user_id, price FROM orders WHERE id = ?";
-
-        $stmt = $this->db()->prepare($sql);
-        $stmt->bind_param("i", $orderId);
-        $stmt->execute();
-
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-
-        if (!$row) {
-            return null; // La commande n'a pas été trouvée, on retourne null
+      
+        $query = $this->db->prepare("SELECT * FROM orders WHERE id = :id");
+        $parameters = [
+                'id' => $orderId
+            ];
+        $query->execute($parameters);
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        
+        if ($result !== false) 
+        {
+            date_default_timezone_set('Europe/Paris');
+            $date = date('d m y h:i:s');
+            $userId = $this->getUserById($result['user_id']); // Méthode à implémenter pour récupérer un utilisateur par son ID
+            $totalPrice = $result['total_price'];
+            $order = new Order($date, $userId, $totalPrice);
+            return $order;
         }
-
-        // Construire l'objet Order à partir des données de la base de données
-        $date = DateTime::createFromFormat('Y-m-d H:i:s', $row['date']);
-        $product = $this->getProductById($row['product_id']); // Méthode à implémenter pour récupérer un produit par son ID
-        $user = $this->getUserById($row['user_id']); // Méthode à implémenter pour récupérer un utilisateur par son ID
-        $price = $row['price'];
-
-        return new Order($row['id'], $date, $product, $user, $price);
-    }
-
-    public function getAmountProduct(int $order_id): ?int {
-        $sql = "SELECT COUNT(*) as amount FROM product_order WHERE order_id = ?";
-
-        $stmt = $this->db()->prepare($sql);
-        $stmt->bind_param("i", $order_id);
-        $stmt->execute();
-
-        $result = $stmt->get_result();
-
-        if ($row = $result->fetch_assoc()) {
-            $amount = $row['amount'];
-        } else {
-            $amount = null;
-        }
-
-        return $amount;
+        
+        return null; // La commande n'a pas été trouvée, on retourne null
     }
 
     public function getTotalPrice(int $order_id): float {
-        $sql = "SELECT SUM(products.price) as total_price FROM products JOIN product_order ON products.id = product_order.product_id WHERE product_order.order_id = ?";
+        
+        //Retrieve all products with linked by the same order_id / product_id by calculating their total sum
+        $query = $this->db->prepare("SELECT SUM(products.price) as price FROM products JOIN product_order ON products.id = product_order.product_id WHERE product_order.order_id = :order_id");
+        
+        $parameters = [ 'order_id' => $order_id];
+        $query->execute($parameters);
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        $totalPrice = 0.0;
 
-        $stmt = $this->db()->prepare($sql);
-        $stmt->bind_param("i", $order_id);
-        $stmt->execute();
-
-        $result = $stmt->get_result();
-
-        if ($row = $result->fetch_assoc()) {
-            $totalPrice = (float) $row['total_price'];
-        } else {
-            $totalPrice = 0.0;
+        if($result !== false) {
+            $totalPrice = (float) $result['total_price'];
         }
 
         return $totalPrice;
     }
 
     public function getAllOrders(): ?array {
-        $sql = "SELECT * FROM orders";
 
-        $stmt = $this->db()->prepare($sql);
-        $stmt->execute();
+        $query = $this->db->prepare("SELECT * FROM orders");
+        $query->execute();
 
-        $result = $stmt->get_result();
-
-        $arrayOrders = array();
-
-        while ($row = $result->fetch_assoc()) {
-            $order = new Order($row['id'], new DateTime($row['date']), $this->getProductById($row['product_id']), $this->getUserById($row['user_id']), $row['price']);
+        $results = $query->fetch(PDO::FETCH_ASSOC);
+        $arrayOrders = [];
+        
+        foreach($results as $order)
+        {
+            $order = new Order($order['id'], $order['date'], $this->getUserById($row['user_id']), $order['total_price']);
+            //Ne comprend pas getUserById
             $arrayOrders[] = $order;
         }
 
@@ -107,22 +87,31 @@ class OrderManager extends AbstractManager {
     }
 
     public function getOrderByUser(User $user): ?array {
-        $sql = "SELECT * FROM orders WHERE user_id = ?";
+        
+        $query = $this->db()->prepare("SELECT * FROM orders WHERE user_id = :id");
 
-        $stmt = $this->db()->prepare($sql);
-        $stmt->bind_param("i", $user->getId());
-        $stmt->execute();
-
-        $result = $stmt->get_result();
+        $parameters = ['id' => $user->getId()];
+        $result = $query->fetch(PDO::FETCH_ASSOC);
 
         $arrayOrders = array();
 
-        while ($row = $result->fetch_assoc()) {
-            $order = new Order($row['id'], new DateTime($row['date']), $this->getProductById($row['product_id']), $this->getUserById($row['user_id']), $row['price']);
+        foreach ($result as $orderUser) {
+            $order = new Order($orderUser['id'], ($orderUser['date']), $this->getUserById($orderUser['user_id']), $orderUser['price']);
             $arrayOrders[] = $order;
         }
 
         return $arrayOrders;
+    }
+    
+    public function getOrderId($id)
+    {
+        $query = $this->db->prepare("SELECT order_id FROM product_order WHERE order_id = :id ");
+        
+        $parameters = ['id' => $id];
+        $order_id = $query->fecth(PDO::FETCH_ASSOC);
+        
+        return $order_id;
+        
     }
 }
 ?>

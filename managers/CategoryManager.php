@@ -37,7 +37,7 @@ class CategoryManager extends AbstractManager {
         $result = $query->fetch(PDO::FETCH_ASSOC);
 
         $newCat = new Category($result['category_name'], $result['description']);
-
+        $newCat->setId($result['id']);
         return $newCat;
     }
 
