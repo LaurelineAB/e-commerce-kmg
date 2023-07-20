@@ -8,42 +8,43 @@ class UserManager extends AbstractManager
     // création de user
     public function insertUser(User $user) : ?User
     {
-        $query = $this->db->prepare("INSERT INTO users(id,first_name,last_name, email, password) VALUES (null, :firstName,:lastName, :email, :password)");
+        $query = $this->db->prepare("INSERT INTO users(first_name,last_name, email, password) VALUES (:firstName,:lastName, :email, :password)");
         $parameters = [
-            "firstName" => $user->getfirstName(),
-            "lastName" => $user->getlastName(),
+            "firstName" => $user->getFirstName(),
+            "lastName" => $user->getLastName(),
             "email" => $user->getEmail(),
             "password" => $user->getPassword()
         ];
 
         $query->execute($parameters);
-        $id = $query->fetch(PDO::FETCH_ASSOC);
+        // $id = $query->fetch(PDO::FETCH_ASSOC);
         $user->setId($this->db->lastInsertId());
         return $user;
 
     }
 
-    //Mis ajour d'un User
+    //Mise à jour d'un User
 
-    public function updateUser(int $id) : ?User
+    public function updateUser(User $user) : void
     {
-
-        $query = $this->db->prepare("DELETE FROM users WHERE id = :id");
+        $query = $this->db->prepare("UPDATE users SET first_name = :firstName, last_name = :lastName, email = :email, password = :password WHERE users.id = :id");
         $parameters = [
-            "id" => $id
+            "firstName" => $user->getFirstName(),
+            "lastName" => $user->getLastName(),
+            "email" => $user->getEmail(),
+            "password" => $user->getPassword
         ];
         $query->execute($parameters);
-
     }
 
 
 
     // supression d'un user
-    public function delete(int $id) : ?User
+    public function deleteUser(User $user) : void
     {
         $query = $this->db->prepare("DELETE FROM users WHERE id = :id");
         $parameters = [
-            "id" => $id
+            "id" => $user->getId()
         ];
         $query->execute($parameters);
 
@@ -52,7 +53,6 @@ class UserManager extends AbstractManager
     //reccuperation d'un user avec id
     public function getUserById(int $id) : ?User
     {
-
         $query = $this->db->prepare("SELECT * FROM users WHERE users.id = :id");
         $parameters = [
             "id" => $id
@@ -62,21 +62,41 @@ class UserManager extends AbstractManager
 
         if($result !== false)
         {
-            $user = new User($result["firstName"],$result["lastName"], $result["email"], $result["password"]);
+            $user = new User($result["first_name"],$result["last_name"], $result["email"], $result["password"]);
             $user->setId($result["id"]);
-
             return $user;
         }
+        else
+        {
+            return null;
+        }
+    }
+    
+    //reccuperation d'un user avec email
+    public function getUserByEmail(string $email) : ?User
+    {
+        $query = $this->db->prepare("SELECT * FROM users WHERE users.email = :email");
+        $parameters = [
+            "email" => $email
+        ];
+        $query->execute($parameters);
+        $result = $query->fetch(PDO::FETCH_ASSOC);
 
-        return null;
-
-
+        if($result !== false)
+        {
+            $user = new User($result["first_name"],$result["last_name"], $result["email"], $result["password"]);
+            $user->setId($result["id"]);
+            return $user;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     // reccuperation de tous les utilisateurs
     public function getAllUsers() : array
     {
-
         $list = [];
         $query = $this->db->prepare("SELECT * FROM users");
         $query->execute();
@@ -86,15 +106,12 @@ class UserManager extends AbstractManager
         {
             foreach($result as $item)
             {
-                $user->setId($item["id"]);
-                $user = new User($item["first_name"]);
-                $user = new User($item["last_name"]);
+                $user = new User($item['first_name'], $item['last_name'], $item['email'], $item['password']);
+                $user->setId($item['id']);
                 $list[] = $user;
             }
         }
-
         return $list;
-
     }
 }
 

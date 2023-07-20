@@ -1,24 +1,39 @@
 
 <h1>Créer un produit </h1>
 
-<form method="POST" action="index.php?route=login">
+<form method="POST" action="index.php?route=create-product">
     <fieldset>
-        <label for="name">Nom produit:</label>
+        <label for="name">Nom produit :</label>
         <input type="text" name="name" id="name">
     </fieldset>
     <fieldset>
-        <label for="image">image</label>
-        <input type="file" name="image" id="image">
+        <label for="picture">Image :</label>
+        <input type="text" name="picture" id="picture">
     </fieldset>
     <fieldset>
-        <label for="description">Description</label>
-        <input type="description" name="Description" id="description">
+        <label for="description">Description :</label>
+        <input type="textarea" name="description" id="description">
     </fieldset>
     <fieldset>
-        <label for="prix">Prix</label>
-        <input type="number" name="prix" id="prix">
+        <label for="price">Prix :</label>
+        <input type="number" name="price" id="price">
     </fieldset>
     <fieldset>
-        <input type="image" name="btn" id="btn" value="valider">
+        <label for="quantity">Quantité en stock :</label>
+        <input type="number" name="quantity" id="quantity">
+    </fieldset>
+    <fieldset>
+        <label for="category">Catégorie :</label>
+        <select name="category" id="category">
+            <?php
+                foreach($data as $category)
+                {
+                    echo "<option value='".$category['id']."'>".$category['name']."<option>";
+                }
+            ?>
+        </select>
+    </fieldset>
+    <fieldset>
+        <input type="submit" name="submit-new-product" id="submit-new-product" value="Valider">
     </fieldset>
 </form>

@@ -20,7 +20,7 @@ class ProductController extends AbstractController {
     // To be able to create a product
     public function createProduct()
     {
-        $this->render('products/create.phtml', []);
+        $this->render('products/create.phtml', $this->cm->getAllCategories());
         if(isset($_POST['submit-new-product']))
         {
             $name = $_POST['name'];
@@ -29,7 +29,7 @@ class ProductController extends AbstractController {
             $price = $_POST['price'];
             $quantity = $_POST['quantity'];
             $catID = $_POST['category'];
-            $category = $this->cm->getCategoryById($catId);
+            $category = $this->cm->getCategoryById($catID);
 
             $product = new Product($name, $picture, $description, $price, $quantity, $category);
             $this->pm->createProduct($product);
@@ -38,13 +38,26 @@ class ProductController extends AbstractController {
         }
     }
     // To have all the products by Category
-    public function productsByCategory(string $category)
+    public function productsByCategory()
     {
+<<<<<<< HEAD
+=======
+        $id = $_GET['category_id'];
+>>>>>>> refs/remotes/origin/francis
         $category = $this->cm->getCategoryById($id); // Put the id in parameter
         $products = $this->pm->getProductByCategory($category->getName()); // Put the name of the category in parameter
         $this->render('products/index.phtml', $products, $category);
     }
     
+<<<<<<< HEAD
+=======
+    //To get a product by its id
+    public function getProductById(int $id)
+    {
+        $product = $this->pm->getProductById();
+        return $product;
+    }
+>>>>>>> refs/remotes/origin/francis
 }
 
 ?>
