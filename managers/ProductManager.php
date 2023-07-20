@@ -84,14 +84,38 @@ class ProductManager extends AbstractManager {
     // To get all the products from a same category
     public function getProductByCategory(string $name) : array
     {
-        $query=$this->db->prepare("SELECT * FROM products JOIN categories ON products.category_id = categories.id
-            WHERE categories.category_name = :name");
-        $parameters=['name' => $name];
-        $query->execute($parameters);
+        // $query=$this->db->prepare("SELECT * FROM products JOIN categories ON products.id = categories.product_id
+        //     WHERE categories.name = :name");
+        // $parameters=['name' => $name];
+        // $query->execute($parameters);
 
-        $list = $query->fetchAll(PDO::FETCH_ASSOC);
+        // $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        
+        // $productInstance = [];
+        //  foreach($results as $product)
+        //  {
+        //      $productInstance = new Product()
+        //  }
 
-        return $list;
+        // return $list;
+    }
+    
+    public function getProductByOrder($orderId)
+    {
+        $query = $this->db->prepare("SELECT * 
+                                    FROM products 
+                                    JOIN product_order ON product_order.product_id = product.id 
+                                    WHERE  product_order.order.id = :id ");
+        $parameters = ['id' => $orderId];
+        $results = $query->execute($parameters);
+        $productArray = [];
+         foreach($results as $productOrder)
+         {
+             $product = new Product($productOrder['product_name'], $productOrder['pictures'], $productOrder['description'], $product['price'], $productOrder['quantity'], $productOrder['category']);
+             $productArray[] = $product;
+         }
+        return $productArray;
+        
     }
 }
 

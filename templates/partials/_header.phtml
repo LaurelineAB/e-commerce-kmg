@@ -1,0 +1,23 @@
+       
+<!--https://get.foundation/templates-previews-sites-f6-xy-grid/product-page.html -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <ul class="dropdown menu" data-dropdown-menu="" role="menubar" data-e="ce5t8p-e">
+      <li class="menu-text" role="menuitem">Khalass!! Store</li>
+      <li class="has-submenu is-dropdown-submenu-parent opens-right" role="menuitem" aria-haspopup="true" aria-label="One" data-is-click="false">
+        <a href="#">Categories</a>
+        <ul class="submenu menu vertical is-dropdown-submenu first-sub" data-submenu="" role="menu" style="">
+            <?php foreach($categories as $category): ?>
+          <li role="menuitem" class="is-submenu-item is-dropdown-submenu-item"><a href="#"><?= $category['category_name']; ?></a></li>
+            <?php endforeach?>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div class="top-bar-right">
+    <ul class="menu">
+      <li><input type="search" placeholder="Search"></li>
+      <li><button type="button" class="button">Search</button></li>
+    </ul>
+  </div>
+</div>

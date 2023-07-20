@@ -3,8 +3,9 @@
 class OrderController extends AbstractController {
 
     public function __construct(){
-
-        $this->orderManager = new OrderManager();
+        
+        $this->om = new OrderManager();
+        $this->pm = new ProductManager();
 
     }
 
@@ -13,9 +14,16 @@ class OrderController extends AbstractController {
     $this->render('orders/create.phtml', $post);
 
         if(isset($_POST['add'])){
-            $this->orderManager->saveOrder($post);
+            $this->om->saveOrder($post);
         }
     }
+    
+    public function OrderByUser(User $user){
+        $this->om->getOrderByUser($user);
+        $this->render("orders/by-user.phtml", $userOrder);
+    }
+    
+    
 }
 
 ?>

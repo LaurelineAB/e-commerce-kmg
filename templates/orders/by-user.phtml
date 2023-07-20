@@ -1,0 +1,20 @@
+<hr>   
+<div class="text-center">
+    <!--getUserbyId-->
+    <h2><?= $_SESSION['user']->getFirstName()." ".$_SESSION['user']->getLastName(); ?></h2>
+    <hr>
+</div>
+
+<div class="grid-x grid-margin-x small-up-2 medium-up-3 large-up-6">
+    <!--getOrderByUser-->
+    <?php foreach($_SESSION['cart'] as $product) : ?>
+    <div class="cell">
+      <img class="thumbnail" src="<?= $product->getPicture()?>" alt="img du produit">
+          <h5><?= $product->getName() ?></h5>
+          <p><?= $product->getDescription() ?></p>
+          <!--Possibilité d'ajouter quantité et prix total-->
+          <p><?= $product->getPrice?></p>
+      <a href="" class="button small expanded hollow">Delete</a>
+    </div>
+    <?php endforeach; ?>
+</div>
