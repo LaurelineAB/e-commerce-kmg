@@ -24,6 +24,11 @@ class CategoryController extends AbstractController {
             header("Location:index.php?route=homepage");
         }
     }
+    public function getCategoryById(int $id)
+    {
+        $category = $this->cm->getCategoryById($id);
+        return $category;
+    }
 }
 
 ?>

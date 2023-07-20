@@ -20,7 +20,7 @@ class Router {
             if($_GET['route'] === "homepage")
             {
                 $this->categoryController->getAllCategories();
-                $this->productController->indexOfProducts();
+                // $this->productController->indexOfProducts();
             }
             if($_GET['route'] === "create-user")
             {
@@ -45,6 +45,11 @@ class Router {
             else if($_GET['route'] === "category" && isset($_GET['category_id']))
             {
                 $this->productController->productsByCategory();
+            }
+            else if($_GET['route'] === "product" && isset($_GET['product_id']))
+            {
+                $product = $this->productController->getProductById($_GET['product_id']);
+                $this->productController->render("products/product.phtml", [$product]);
             }
         }
         else

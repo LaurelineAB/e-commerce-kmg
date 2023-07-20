@@ -20,7 +20,7 @@ class ProductController extends AbstractController {
     // To be able to create a product
     public function createProduct()
     {
-        $this->render('products/create.phtml', []);
+        $this->render('products/create.phtml', $this->cm->getAllCategories());
         if(isset($_POST['submit-new-product']))
         {
             $name = $_POST['name'];
@@ -45,6 +45,13 @@ class ProductController extends AbstractController {
         $category = $this->cm->getCategoryById($id); // Put the id in parameter
         $products = $this->pm->getProductByCategory($category->getName()); // Put the name of the category in parameter
         $this->render('categories/category.phtml', $products);
+    }
+    
+    //To get a product by its id
+    public function getProductById(int $id)
+    {
+        $product = $this->pm->getProductById();
+        return $product;
     }
 }
 

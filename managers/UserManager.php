@@ -71,6 +71,28 @@ class UserManager extends AbstractManager
             return null;
         }
     }
+    
+    //reccuperation d'un user avec email
+    public function getUserByEmail(string $email) : ?User
+    {
+        $query = $this->db->prepare("SELECT * FROM users WHERE users.email = :email");
+        $parameters = [
+            "email" => $email
+        ];
+        $query->execute($parameters);
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+
+        if($result !== false)
+        {
+            $user = new User($result["first_name"],$result["last_name"], $result["email"], $result["password"]);
+            $user->setId($result["id"]);
+            return $user;
+        }
+        else
+        {
+            return null;
+        }
+    }
 
     // reccuperation de tous les utilisateurs
     public function getAllUsers() : array
